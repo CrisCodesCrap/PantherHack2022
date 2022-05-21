@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from schemes import LoginInfo,RegisterInfo
 from login import LoginHandler
+from posts import PostHandler
 
 app = FastAPI()
 
@@ -29,3 +30,7 @@ async def register(data:RegisterInfo):
         if LoginHandler.NewUserAssignment(data.username, data.password, data.email):
             return {'message': True}
     return {'message': False}
+
+@app.get('/users/posts/get')
+async def get_posts():
+    return {'status':PostHandler.getPosts()}

@@ -2,19 +2,16 @@ from sqlalchemy import ARRAY, Boolean, Column, DateTime, Float, ForeignKey,Strin
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import database_exists, create_database
-from os import getenv
-from dotenv import load_dotenv
+from settings import settings
 
-load_dotenv()
-DATABASE_URL = getenv('DATABASE_URL')
 def engine_init(settings):
-    url = f'{settings["host"]}'
+    url = f'{settings}'
     if not database_exists(url):
         create_database(url)
     engine = create_engine(url,pool_size=50,echo=False)
     return engine
 
-engine = engine_init(DATABASE_URL)
+engine = engine_init(settings)
 
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)()
 
