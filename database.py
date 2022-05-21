@@ -2,8 +2,11 @@ from sqlalchemy import ARRAY, Boolean, Column, DateTime, Float, ForeignKey,Strin
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy_utils import database_exists, create_database
-from settings import settings
+from os import getenv
+from dotenv import load_dotenv
 
+load_dotenv()
+DATABASE_URL = getenv('DATABASE_URL')
 def engine_init(settings):
     url = f'{settings["host"]}'
     if not database_exists(url):
@@ -11,7 +14,7 @@ def engine_init(settings):
     engine = create_engine(url,pool_size=50,echo=False)
     return engine
 
-engine = engine_init(settings)
+engine = engine_init(DATABASE_URL)
 
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)()
 
@@ -23,7 +26,6 @@ class User(Base):
     email = Column(String, unique=True)
     store = Column(String)
     name = Column(String(30),unique=True)
-    position = Column(String())
     password = Column(String(64))
     timestamp = Column(DateTime)
     typeOfEstablishment = Column(Integer)
